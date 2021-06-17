@@ -1,0 +1,18 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+.App {
+  width: 60vw;
+  margin: 0 auto;
+  background-color: #fbfbfb;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+h1 {
+  margin-top: 0;
+  text-align: center;
+}

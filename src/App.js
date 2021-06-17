@@ -1,6 +1,12 @@
-import "./App.css";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import TreeView from "@material-ui/lab/TreeView";
+import TreeItem from "@material-ui/lab/TreeItem";
+
+import "./App.css";
 
 const fetchData = async () => {
   const response = await axios.get(
@@ -10,14 +16,40 @@ const fetchData = async () => {
 };
 
 function App() {
+  const [recommendations, setRecommendations] = useState([]);
   const { data, error, loading } = useQuery("restaurantData", fetchData);
+
+  useEffect(() => {
+    setRecommendations(data ? data.body.Recommendations : []);
+  }, [data]);
 
   return (
     <div className="App">
+      <h1>Restaurtant list</h1>
       {error && <p>Error in loading</p>}
       {loading && <p>Loading</p>}
-      {data && console.log(data)}
-      <h1>Folder structure</h1>
+      {data &&
+        recommendations.map((restaurant) => (
+          <TreeView
+            key={restaurant.RestaurantID}
+            defaultCollapseIcon={<ExpandMoreIcon />}
+            defaultExpandIcon={<ChevronRightIcon />}
+          >
+            <TreeItem
+              nodeId={restaurant.RestaurantID}
+              label={restaurant.RestaurantName}
+            >
+              {
+                (restaurant.menu[0].type = "sectionheader" ? (
+                  <TreeItem
+                    nodeId={"" + restaurant.menu[0].id}
+                    label={restaurant.menu[0].name}
+                  ></TreeItem>
+                ) : null)
+              }
+            </TreeItem>
+          </TreeView>
+        ))}
     </div>
   );
 }
