@@ -65,6 +65,7 @@ const Tree = ({ data }) => {
 };
 
 const TreeNode = ({ node }) => {
+  const [dragged, setDragged] = useState(false);
   const isNode = node.selected === 1 || node.type === "item";
 
   const onDragStart = (event, draggedNode) => {
@@ -81,7 +82,9 @@ const TreeNode = ({ node }) => {
 
   const onDragEnd = (event, node) => {
     event.preventDefault();
-    console.log(node.styles);
+    event.stopPropagation();
+
+    setDragged(true);
   };
 
   useEffect(() => {}, [node, node.children]);
@@ -90,6 +93,7 @@ const TreeNode = ({ node }) => {
     <>
       {isNode ? (
         <TreeItem
+          style={{ display: dragged ? "none" : "block" }}
           draggable
           nodeId={node.id}
           label={node.name}
@@ -105,6 +109,7 @@ const TreeNode = ({ node }) => {
           draggable
           nodeId={node.id}
           label={node.name}
+          style={{ display: dragged ? "none" : "block" }}
           onDragStart={(e) => onDragStart(e, node)}
           onDragEnd={(e) => onDragEnd(e, node)}
         />
