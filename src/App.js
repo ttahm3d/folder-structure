@@ -5,6 +5,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
+import Tree from "./Tree";
 
 import "./App.css";
 
@@ -41,10 +42,7 @@ function App() {
             >
               {
                 (restaurant.menu[0].type = "sectionheader" ? (
-                  <TreeItem
-                    nodeId={"" + restaurant.menu[0].id}
-                    label={restaurant.menu[0].name}
-                  ></TreeItem>
+                  <Tree data={restaurant.menu[0].children} />
                 ) : null)
               }
             </TreeItem>
