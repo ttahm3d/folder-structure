@@ -5,7 +5,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeView from "@material-ui/lab/TreeView";
 import TreeItem from "@material-ui/lab/TreeItem";
-import Tree from "./Tree";
+// import Tree from "./Tree";
 
 import "./App.css";
 
@@ -52,4 +52,64 @@ function App() {
   );
 }
 
+const Tree = ({ data }) => {
+  useEffect(() => {}, [data]);
+
+  return (
+    <>
+      {data.map((child) => (
+        <TreeNode key={child.id} node={child} />
+      ))}
+    </>
+  );
+};
+
+const TreeNode = ({ node }) => {
+  const isNode = node.selected === 1 || node.type === "item";
+
+  const onDragStart = (event, draggedNode) => {
+    event.stopPropagation();
+    console.log(draggedNode);
+    const data = JSON.stringify(draggedNode);
+    event.dataTransfer.setData("node", data);
+  };
+
+  const onDrop = (event, droppableNode) => {
+    let draggedNode = JSON.parse(event.dataTransfer.getData("node"));
+    droppableNode.children.push(draggedNode);
+  };
+
+  const onDragEnd = (event, node) => {
+    event.preventDefault();
+    console.log(node.styles);
+  };
+
+  useEffect(() => {}, [node, node.children]);
+
+  return (
+    <>
+      {isNode ? (
+        <TreeItem
+          draggable
+          nodeId={node.id}
+          label={node.name}
+          onDragOver={(e) => e.preventDefault()}
+          onDragStart={(e) => onDragStart(e, node)}
+          onDrop={(e) => onDrop(e, node)}
+          onDragEnd={(e) => onDragEnd(e, node)}
+        >
+          <Tree data={node.children} />
+        </TreeItem>
+      ) : (
+        <TreeItem
+          draggable
+          nodeId={node.id}
+          label={node.name}
+          onDragStart={(e) => onDragStart(e, node)}
+          onDragEnd={(e) => onDragEnd(e, node)}
+        />
+      )}
+    </>
+  );
+};
 export default App;
